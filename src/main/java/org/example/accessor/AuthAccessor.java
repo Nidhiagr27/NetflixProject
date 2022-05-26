@@ -56,4 +56,17 @@ public class AuthAccessor {
             throw new DependencyFailureException(ex);
         }
     }
+
+    public void deleteAuthByToken(final String token){
+        String query="DELETE from auth where token=?";
+        try(Connection connection= dataSource.getConnection()){
+            PreparedStatement pstmt= connection.prepareStatement(query);
+            pstmt.setString(1,token);
+            pstmt.execute();
+        }
+        catch(SQLException ex){
+            ex.printStackTrace();
+            throw new DependencyFailureException(ex);
+        }
+    }
 }
