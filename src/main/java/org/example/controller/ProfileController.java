@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ProfileController {
@@ -24,6 +22,20 @@ public class ProfileController {
         return ResponseEntity.status(HttpStatus.OK).build();
         }
         catch(Exception ex){
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
+    @DeleteMapping("/user/profile/{profileId}")
+    @Secured({Roles.Customer})
+    public ResponseEntity<Void> deactivateProfile(@PathVariable("profileId") String profileId){
+        try{
+            profileService.deactivateProfile(profileId);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        catch (Exception ex){
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

@@ -21,8 +21,12 @@ public class ProfileService {
         UserDTO userDTO=(UserDTO)authentication.getPrincipal();
 
            if(name.length()<5 || name.length()>20){
-               throw new InvalidDataException("Name lentgh should be 5 and 20");
+               throw new InvalidDataException("Name length should be 5 and 20");
            }
            profileAccessor.addNewProfile(userDTO.getUserId(),name,ProfileType.valueOf(profileType.name()));
+    }
+
+    public void deactivateProfile(final String profileId){
+        profileAccessor.deleteProfile(profileId);
     }
 }
