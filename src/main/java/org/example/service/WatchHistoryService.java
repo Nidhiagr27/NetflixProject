@@ -30,10 +30,9 @@ public class WatchHistoryService {
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         UserDTO userDTO=(UserDTO)authentication.getPrincipal();
         validator.validateProfile(profileId, userDTO.getUserId());
-        VideoDTO videoDTO= videoAccessor.getVideoByVideoId(videoId);
-        if(videoDTO==null){
-            throw new InvalidVideoException("Video with videoId "+videoId+" is invalid or do not exist!!");
-        }
+        System.out.println("userId = "+ userDTO.getUserId());
+        validator.validateVideoId(videoId);
+        VideoDTO videoDTO=videoAccessor.getVideoByVideoId(videoId);
         if(watchedLength <1 || watchedLength>videoDTO.getTotalLength()){
             throw new InvalidDataException("Watched length is invalid!");
         }
@@ -46,6 +45,19 @@ public class WatchHistoryService {
             watchHistoryAccessor.updateWatchedLength(profileId, videoId, watchedLength);
         }
 
+    }
+
+    public int getWatchHistory(final String profileId,final String videoId){
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        UserDTO userDTO=(UserDTO)authentication.getPrincipal();
+        validator.validateProfile(profileId, userDTO.getUserId());
+        System.out.println("userId = "+ userDTO.getUserId());
+        validator.validateVideoId(videoId);
+        WatchHistoryDTO watchHistoryDTO=watchHistoryAccessor.getWatchHistory(profileId, videoId);
+        if(watchHistoryDTO!=null){
+        return watchHistoryDTO.getWatchedLength();
+        }
+        return 0;
     }
 
 

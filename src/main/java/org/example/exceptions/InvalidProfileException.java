@@ -7,8 +7,5 @@ public class InvalidProfileException extends RuntimeException{
          super(message);
      }
 
-    @Override
-    public String getMessage() {
-        return message;
-    }
+
 }
