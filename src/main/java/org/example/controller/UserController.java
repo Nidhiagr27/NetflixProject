@@ -2,6 +2,8 @@ package org.example.controller;
 
 import org.example.controller.models.CreateUserInput;
 import org.example.controller.models.VerifyEmailInput;
+import org.example.controller.models.VerifyPhoneInput;
+import org.example.exceptions.AccountAlreadyVerifiedException;
 import org.example.exceptions.InvalidDataException;
 import org.example.security.Roles;
 import org.example.service.UserService;
@@ -60,11 +62,13 @@ public class UserController {
             userService.verifyEmail(emailInput.getOtp());
             return ResponseEntity.status(HttpStatus.OK).body("Otp verified successfully");
         }
-        catch(InvalidDataException ex) {
+        catch(InvalidDataException | AccountAlreadyVerifiedException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
         catch(Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
+
+
 }

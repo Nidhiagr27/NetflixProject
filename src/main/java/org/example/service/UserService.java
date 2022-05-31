@@ -3,6 +3,7 @@ package org.example.service;
 import org.example.accessor.OtpAccessor;
 import org.example.accessor.UserAccessor;
 import org.example.accessor.models.*;
+import org.example.exceptions.AccountAlreadyVerifiedException;
 import org.example.exceptions.InvalidDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -78,6 +79,9 @@ public class UserService {
             else {
                 throw new InvalidDataException("Otp does not exist!");
             }
+        }
+        else{
+            throw new AccountAlreadyVerifiedException("Email already verified!");
         }
     }
 }
