@@ -20,10 +20,7 @@ public class Validator {
 
     public void validateProfile(final String profileId,final String userId){
         ProfileDTO profileDTO=profileAccessor.getProfileByProfileId(profileId);
-        System.out.println("profileId = "+profileDTO.getProfileId());
-        System.out.println(profileId);
         if(profileDTO == null || !profileDTO.getUserId().equals(userId)){
-            System.out.println(profileId);
             throw  new InvalidProfileException("Profile "+profileId+" is invalid or doesn't exist!");
         }
     }

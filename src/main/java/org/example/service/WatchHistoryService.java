@@ -30,7 +30,6 @@ public class WatchHistoryService {
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         UserDTO userDTO=(UserDTO)authentication.getPrincipal();
         validator.validateProfile(profileId, userDTO.getUserId());
-        System.out.println("userId = "+ userDTO.getUserId());
         validator.validateVideoId(videoId);
         VideoDTO videoDTO=videoAccessor.getVideoByVideoId(videoId);
         if(watchedLength <1 || watchedLength>videoDTO.getTotalLength()){
