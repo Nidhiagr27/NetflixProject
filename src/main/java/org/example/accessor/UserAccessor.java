@@ -1,9 +1,6 @@
 package org.example.accessor;
 
-import org.example.accessor.models.EmailVerificationStatus;
-import org.example.accessor.models.UserDTO;
-import org.example.accessor.models.UserRole;
-import org.example.accessor.models.UserState;
+import org.example.accessor.models.*;
 import org.example.exceptions.DependencyFailureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,7 +19,7 @@ public class UserAccessor {
 
     /** Gets the user based on his email, if user exists returns its UserDTO object else returns null */
     public UserDTO getUserByEmail(final String email) {
-        String query = "SELECT userId, name, email, password, phone, state, role,emailVerificationStatus from users where email = ?";
+        String query = "SELECT userId, name, email, password, phone, state, role,emailVerificationStatus,phoneVerificationStatus from users where email = ?";
         try(Connection connection = dataSource.getConnection()) {
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, email);
@@ -38,6 +35,7 @@ public class UserAccessor {
                         .state(UserState.valueOf(resultSet.getString(6)))
                         .role(UserRole.valueOf(resultSet.getString(7)))
                         .emailVerificationStatus(EmailVerificationStatus.valueOf(resultSet.getString(8)))
+                        .phoneVerificationStatus(PhoneVerificationStatus.valueOf(resultSet.getString(9)))
                         .build();
                 return userDTO;
             }
@@ -71,7 +69,7 @@ public class UserAccessor {
     }
 
     public UserDTO getUserByphone(final String phone) {
-        String query = "SELECT userId, name, email, password, phone, state, role,emailVerificationStatus from users where phone = ?";
+        String query = "SELECT userId, name, email, password, phone, state, role,emailVerificationStatus,phoneVerificationStatus from users where phone = ?";
         try(Connection connection = dataSource.getConnection()) {
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, phone);
@@ -87,6 +85,7 @@ public class UserAccessor {
                         .state(UserState.valueOf(resultSet.getString(6)))
                         .role(UserRole.valueOf(resultSet.getString(7)))
                         .emailVerificationStatus(EmailVerificationStatus.valueOf(resultSet.getString(8)))
+                        .phoneVerificationStatus(PhoneVerificationStatus.valueOf(resultSet.getString(9)))
                         .build();
                 return userDTO;
             }
@@ -126,4 +125,20 @@ public class UserAccessor {
         }
 
     }
+
+    public void updatePhoneVerificationStatus(final String userId, final PhoneVerificationStatus newStatus) {
+        String query = "UPDATE users set phoneVerificationStatus = ? where userId = ?";
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, newStatus.toString());
+            pstmt.setString(2, userId);
+            pstmt.executeUpdate();
+        }
+        catch(SQLException ex) {
+            ex.printStackTrace();
+            throw new DependencyFailureException(ex);
+        }
+    }
+
+
 }

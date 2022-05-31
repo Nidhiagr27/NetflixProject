@@ -84,4 +84,23 @@ public class UserService {
             throw new AccountAlreadyVerifiedException("Email already verified!");
         }
     }
+
+    public void verifyPhone(final String otp) {
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+        UserDTO userDTO = (UserDTO) authentication.getPrincipal();
+        if (userDTO.getPhoneVerificationStatus().equals(PhoneVerificationStatus.UNVERIFIED)) {
+            OtpDTO otpDTO = otpAccessor.getUnusedOtp(userDTO.getUserId(), otp, OtpSentTo.PHONE);
+            if (otpDTO != null) {
+                userAccessor.updatePhoneVerificationStatus(userDTO.getUserId(), PhoneVerificationStatus.VERIFIED);
+                otpAccessor.updateOtpState(otpDTO.getOtpId(), OtpState.USED);
+            }
+            else {
+                throw new InvalidDataException("Otp does not exist!");
+            }
+        }
+        else{
+            throw new AccountAlreadyVerifiedException("PhoneNo. already verified!");
+        }
+    }
 }

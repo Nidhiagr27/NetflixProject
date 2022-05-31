@@ -70,5 +70,20 @@ public class UserController {
         }
     }
 
+    @PostMapping("/user/phone")
+    @Secured({ Roles.User, Roles.Customer })
+    public ResponseEntity<String> verifyPhoneNo(@RequestBody VerifyPhoneInput phoneInput) {
+        try {
+            userService.verifyPhone(phoneInput.getOtp());
+            return ResponseEntity.status(HttpStatus.OK).body("Otp verified successfully");
+        }
+        catch(InvalidDataException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+        catch(Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+    }
+
 
 }
