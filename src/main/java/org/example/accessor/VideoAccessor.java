@@ -15,7 +15,7 @@ public class VideoAccessor {
     DataSource dataSource;
 
     public VideoDTO getVideoByVideoId(final String videoId){
-        String query="SELECT name,seriesId,showId,rating,releaseDate,totalLength from videos where videoId=?";
+        String query="SELECT name,seriesId,showId,rating,releaseDate,totalLength,videoPath from videos where videoId=?";
         try(Connection connection= dataSource.getConnection()){
             PreparedStatement pstmt=connection.prepareStatement(query);
             pstmt.setString(1,videoId);
@@ -29,6 +29,7 @@ public class VideoAccessor {
                         .rating(resultSet.getDouble(4))
                         .releaseDate(resultSet.getDate(5))
                         .totalLength(resultSet.getInt(6))
+                        .videoPath(resultSet.getString(7))
                         .build();
                 return videoDTO;
             }
