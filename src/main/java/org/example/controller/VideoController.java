@@ -31,4 +31,18 @@ public class VideoController {
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
        }
     }
+    @GetMapping("/video/{videoId}/thumbnail")
+    @Secured({Roles.Customer})
+    public ResponseEntity<String> getVideoThumbnail(@PathVariable("videoId") String videoId){
+        try{
+            String videoThumbnailUrl=videoService.getVideoThumbnail(videoId);
+            return ResponseEntity.status(HttpStatus.OK).body(videoThumbnailUrl);
+        }
+        catch(InvalidVideoException ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+        catch(Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+    }
 }
